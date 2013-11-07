@@ -12,13 +12,12 @@ var unko_imgs = [
     "img/unko_red.png",
     "img/unko_standerd.png",
 ];
-
 var github_img = "img/github.png";
-
 var unko_imgs_num = unko_imgs.length;
 
 var game;
 var toilet;
+var flusher;
 
 var Unko = enchant.Class.create(PhyCircleSprite, {
     initialize: function(){
@@ -58,6 +57,25 @@ var Toilet = enchant.Class.create(enchant.Sprite, {
         this.counter += num;
     }
 });
+
+var Flusher = enchant.Class.create(enchant.Sprite, {
+    initialize: function(){
+        enchant.Sprite.call(this, 63, 53);
+        this.image = game.assets['img/flusher.png']
+        this.x = 160;
+        this.y = GAME_HEIGHT - 78;
+
+        this.hitbody = new PhyBoxSprite(24, 26, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true)
+        this.hitbody.x = this.x + 35;
+        this.hitbody.y = this.y + 13;
+
+        game.rootScene.addChild(this);
+        game.rootScene.addChild(this.hitbody);
+    },
+
+});
+
+
 
 var Room = enchant.Class.create(enchant.Sprite, {
     initialize: function(){
@@ -110,7 +128,7 @@ window.onload = function() {
     game = enchant.Core(GAME_WIDTH, GAME_HEIGHT);
     game.fps = 30;
     //画像のロード
-    game.preload('img/toilet.png', 'img/label.png');
+    game.preload('img/toilet.png', 'img/label.png', 'img/flusher.png');
     for (var i = 0; i < unko_imgs_num; i++){
         game.preload(unko_imgs[i]);
     }
@@ -123,6 +141,7 @@ window.onload = function() {
         // apple.backgroundColor = "red";
         // game.rootScene.addChild(apple);
 
+        flusher = new Flusher();
         toilet = new Toilet();
         new Room();
         new Label();
