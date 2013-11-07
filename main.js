@@ -22,7 +22,7 @@ var label;
 var label_flush;
 var score;
 var label_enable = true;
-var label_flush_enable = true;
+var label_flush_enable = false;
 
 var Unko = enchant.Class.create(PhyCircleSprite, {
     initialize: function(){
@@ -223,7 +223,6 @@ window.onload = function() {
         toilet = new Toilet();
         new Room();
         label = new Label();
-        label_flush = new LabelFlush();
         score = new Score();
 
         game.rootScene.addEventListener('touchstart', function(e){
@@ -232,6 +231,8 @@ window.onload = function() {
                 if(label_enable){
                     label.destroy();
                     label_enable = false;
+                    label_flush = new LabelFlush();
+                    label_flush_enable = true;
                 }
             }
         });
