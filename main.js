@@ -10,11 +10,8 @@ var Unko = enchant.Class.create(PhyCircleSprite, {
     initialize: function(){
         PhyCircleSprite.call(this, 8, enchant.box2d.DYNAMIC_SPRITE, 1.0, 1.0, 0.5, true);
 
-        // var velocity = 600;
-        // var velocity = 200;
         var velocity = (100 + Math.random() * 400) * (1 + toilet.counter * 0.02);
         var direction = (0.2 + Math.random() * 0.6) * Math.PI;
-        // var direction = Math.PI / 2;
 
         this.position = {x: GAME_WIDTH / 2, y: GAME_HEIGHT - 48};
         this.velocity = {x: velocity * Math.cos(direction), y: velocity * -Math.sin(direction)};
@@ -30,15 +27,19 @@ var Toilet = enchant.Class.create(enchant.Sprite, {
         this.image = core.assets['img/toilet.png'];
         this.x = GAME_WIDTH / 2 - this.width / 2;
         this.y = GAME_HEIGHT - 8 - this.height;
+        this.hitbody = new PhyBoxSprite(34, 24, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true)
+        this.hitbody.x = this.x + 1;
+        this.hitbody.y = this.y + 34;
 
-        this.addEventListener('touchstart', this.yield);
         core.rootScene.addChild(this);
+        core.rootScene.addChild(this.hitbody);
     },
     yield: function(){
-        for (var i = 0; i < 10; i++){
+        var num = 10;
+        for (var i = 0; i < num; i++){
             new Unko();
         }
-        this.counter += 10;
+        this.counter += num;
     }
 });
 
