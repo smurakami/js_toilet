@@ -18,12 +18,18 @@ var unko_imgs_num = unko_imgs.length;
 var game;
 var toilet;
 var flusher;
+var label;
+var label_flush;
+var score;
+var label_enable = true;
+var label_flush_enable = true;
 
 var Unko = enchant.Class.create(PhyCircleSprite, {
     initialize: function(){
         PhyCircleSprite.call(this, 8, enchant.box2d.DYNAMIC_SPRITE, 1.0, 1.0, 0.5, true);
 
-        var velocity = (100 + Math.random() * 400) * (1 + toilet.counter * 0.02);
+        // var velocity = (100 + Math.random() * 400) * (1 + toilet.counter * 0.02);
+        var velocity = (100 + Math.random() * 400) * 2;
         var direction = (0.2 + Math.random() * 0.6) * Math.PI;
 
         this.position = {x: GAME_WIDTH / 2, y: GAME_HEIGHT - 48};
@@ -31,7 +37,18 @@ var Unko = enchant.Class.create(PhyCircleSprite, {
         var img_index = Math.floor(Math.random() * unko_imgs_num);
         if(Math.random() > 0.05) this.image = game.assets[unko_imgs[img_index]];
         else this.image = game.assets[github_img];
-        game.rootScene.addChild(this);
+        this.addEventListener('enterframe', this.update);
+        game.rootScene.insertBefore(this, toilet);
+    },
+    update: function(){
+        if(flusher.flushing){
+            this.vx += this.position.x > GAME_WIDTH / 2 ? -20 : 20;
+            if(this.position.x > toilet.hitbody.x - 9 && this.position.x < toilet.hitbody.x + toilet.hitbody.width + 9 &&
+               this.position.y > toilet.hitbody.y - 9 && this.position.y < toilet.hitbody.y + toilet.hitbody.height + 9){
+                score.gain();
+                this.destroy();
+            }
+        }
     },
 });
 
@@ -60,14 +77,33 @@ var Toilet = enchant.Class.create(enchant.Sprite, {
 
 var Flusher = enchant.Class.create(enchant.Sprite, {
     initialize: function(){
-        enchant.Sprite.call(this, 63, 53);
+        enchant.Sprite.call(this, 150, 53);
         this.image = game.assets['img/flusher.png']
         this.x = 160;
         this.y = GAME_HEIGHT - 78;
 
         this.hitbody = new PhyBoxSprite(24, 26, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true)
-        this.hitbody.x = this.x + 35;
+        this.hitbody.x = this.x + 35 + 150 - 63;
         this.hitbody.y = this.y + 13;
+
+        this.flushing = false;
+
+        //流す処理
+        var self = this;
+        this.hitbody.contact(function(obj){
+            if(self.flushing) obj.destroy();
+        });
+
+        this.hitbody.addEventListener('touchstart', function(){
+            self.flushing = true;
+            if(label_flush_enable){
+                label_flush.destroy();
+                label_flush_enable = false;
+            }
+        });
+        this.hitbody.addEventListener('touchend', function(){
+            self.flushing = false;
+        })
 
         game.rootScene.addChild(this);
         game.rootScene.addChild(this.hitbody);
@@ -120,15 +156,57 @@ var Label = enchant.Class.create(enchant.Sprite, {
             this.frame = 1;
         }
         this.age++;
+    },
+    destroy: function(){
+        this.removeEventListener('enterframe', this.update);
+        game.rootScene.removeChild(this);
     }
 });
 
+var LabelFlush = enchant.Class.create(enchant.Sprite, {
+    initialize: function(){
+        enchant.Sprite.call(this, 60, 60);
+        this.image = game.assets['img/label_flush.png'];
+        this.age = 0;
+        this.term = Math.floor(game.fps * 0.6);
+        this.x = GAME_WIDTH - 60;
+        this.y = toilet.y - this.height/2 - 35;
+        this.addEventListener('enterframe', this.update);
+        game.rootScene.addChild(this);
+    },
+    update: function(){
+        if(this.age % this.term > this.term / 4){
+            this.frame = 0;
+        }else {
+            this.frame = 1;
+        }
+        this.age++;
+    },
+    destroy: function(){
+        this.removeEventListener('enterframe', this.update);
+        game.rootScene.removeChild(this);
+    }
+});
+
+var Score = enchant.Class.create(enchant.Label, {
+    initialize: function(){
+        enchant.Label.call(this, "score : 0");
+        this.num = 0;
+        this.x = GAME_WIDTH - 90;
+        this.y = 10;
+        game.rootScene.addChild(this);
+    },
+    gain: function(){
+        this.num++;
+        this.text = "score : " + this.num;
+    }
+});
 
 window.onload = function() {
     game = enchant.Core(GAME_WIDTH, GAME_HEIGHT);
     game.fps = 30;
     //画像のロード
-    game.preload('img/toilet.png', 'img/label.png', 'img/flusher.png');
+    game.preload('img/toilet.png', 'img/label.png', 'img/label_flush.png', 'img/flusher.png');
     for (var i = 0; i < unko_imgs_num; i++){
         game.preload(unko_imgs[i]);
     }
@@ -144,11 +222,17 @@ window.onload = function() {
         flusher = new Flusher();
         toilet = new Toilet();
         new Room();
-        new Label();
+        label = new Label();
+        label_flush = new LabelFlush();
+        score = new Score();
 
         game.rootScene.addEventListener('touchstart', function(e){
             if(e.x > toilet.x && e.x < toilet.x + toilet.width && e.y > toilet.y && e.y < toilet.y + toilet.height){
                 toilet.yield();
+                if(label_enable){
+                    label.destroy();
+                    label_enable = false;
+                }
             }
         });
 
