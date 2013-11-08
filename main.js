@@ -44,7 +44,7 @@ var Unko = enchant.Class.create(PhyCircleSprite, {
         if(flusher.flushing){
             this.vx += this.position.x > GAME_WIDTH / 2 ? -20 : 20;
             if(this.position.x > toilet.hitbody.x - 9 && this.position.x < toilet.hitbody.x + toilet.hitbody.width + 9 &&
-               this.position.y > toilet.hitbody.y - 9 && this.position.y < toilet.hitbody.y + toilet.hitbody.height + 9){
+               this.position.y > toilet.hitbody.y - toilet.hitbody.height / 2 && this.position.y < toilet.hitbody.y + toilet.hitbody.height + 9){
                 score.gain();
                 this.destroy();
             }
@@ -96,12 +96,14 @@ var Flusher = enchant.Class.create(enchant.Sprite, {
 
         this.hitbody.addEventListener('touchstart', function(){
             self.flushing = true;
+            toilet.hitbody.y += toilet.hitbody.height;
             if(label_flush_enable){
                 label_flush.destroy();
                 label_flush_enable = false;
             }
         });
         this.hitbody.addEventListener('touchend', function(){
+            toilet.hitbody.y -= toilet.hitbody.height;
             self.flushing = false;
         })
 
