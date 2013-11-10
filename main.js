@@ -23,6 +23,7 @@ var label_flush;
 var score;
 var label_enable = true;
 var label_flush_enable = false;
+var gauge;
 
 var Unko = enchant.Class.create(PhyCircleSprite, {
     initialize: function(){
@@ -204,6 +205,20 @@ var Score = enchant.Class.create(enchant.Label, {
     }
 });
 
+var Gauge = enchant.Class.create(enchant.Sprite, {
+    initialize: function(){
+        enchant.Sprite.call(this, 30, 30);
+        this.x = 0;
+        this.y = 0;
+        this.backgroundColor = "red";
+
+        game.rootScene.addChild(this);
+    },
+    update: function(){
+
+    }
+});
+
 window.onload = function() {
     game = enchant.Core(GAME_WIDTH, GAME_HEIGHT);
     game.fps = 30;
@@ -226,6 +241,7 @@ window.onload = function() {
         new Room();
         label = new Label();
         score = new Score();
+        gauge = new Gauge();
 
         game.rootScene.addEventListener('touchstart', function(e){
             if(e.x > toilet.x && e.x < toilet.x + toilet.width && e.y > toilet.y && e.y < toilet.y + toilet.height){
