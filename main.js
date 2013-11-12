@@ -241,7 +241,7 @@ window.onload = function() {
         new Room();
         label = new Label();
         score = new Score();
-        gauge = new Gauge();
+        // gauge = new Gauge();
 
         game.rootScene.addEventListener('touchstart', function(e){
             if(e.x > toilet.x && e.x < toilet.x + toilet.width && e.y > toilet.y && e.y < toilet.y + toilet.height){
