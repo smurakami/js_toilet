@@ -1,8 +1,5 @@
 enchant();
 
-var GAME_WIDTH  = 320;
-var GAME_HEIGHT = 320;
-
 var unko_imgs = [
     "img/unko_blue.png",
     "img/unko_green.png",
@@ -33,7 +30,7 @@ var Unko = enchant.Class.create(PhyCircleSprite, {
         var velocity = (100 + Math.random() * 400) * 2;
         var direction = (0.2 + Math.random() * 0.6) * Math.PI;
 
-        this.position = {x: GAME_WIDTH / 2, y: GAME_HEIGHT - 48};
+        this.position = {x: game.width / 2, y: game.height - 48};
         this.velocity = {x: velocity * Math.cos(direction), y: velocity * -Math.sin(direction)};
         var img_index = Math.floor(Math.random() * unko_imgs_num);
         if(Math.random() > 0.05) this.image = game.assets[unko_imgs[img_index]];
@@ -43,7 +40,7 @@ var Unko = enchant.Class.create(PhyCircleSprite, {
     },
     update: function(){
         if(flusher.flushing){
-            this.vx += this.position.x > GAME_WIDTH / 2 ? -20 : 20;
+            this.vx += this.position.x > game.width / 2 ? -20 : 20;
             if(this.position.x > toilet.hitbody.x - 9 && this.position.x < toilet.hitbody.x + toilet.hitbody.width + 9 &&
                this.position.y > toilet.hitbody.y - toilet.hitbody.height / 2 && this.position.y < toilet.hitbody.y + toilet.hitbody.height + 9){
                 score.gain();
@@ -58,8 +55,8 @@ var Toilet = enchant.Class.create(enchant.Sprite, {
         enchant.Sprite.call(this, 54, 58);
         this.counter = 0;
         this.image = game.assets['img/toilet.png'];
-        this.x = GAME_WIDTH / 2 - this.width / 2;
-        this.y = GAME_HEIGHT - 8 - this.height;
+        this.x = game.width / 2 - this.width / 2;
+        this.y = game.height - 8 - this.height;
         this.hitbody = new PhyBoxSprite(34, 24, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true)
         this.hitbody.x = this.x + 1;
         this.hitbody.y = this.y + 34;
@@ -81,7 +78,7 @@ var Flusher = enchant.Class.create(enchant.Sprite, {
         enchant.Sprite.call(this, 150, 53);
         this.image = game.assets['img/flusher.png']
         this.x = 160;
-        this.y = GAME_HEIGHT - 78;
+        this.y = game.height - 78;
 
         this.hitbody = new PhyBoxSprite(24, 26, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true)
         this.hitbody.x = this.x + 35 + 150 - 63;
@@ -119,24 +116,24 @@ var Flusher = enchant.Class.create(enchant.Sprite, {
 var Room = enchant.Class.create(enchant.Sprite, {
     initialize: function(){
         // 床の生成
-        this.floor = new PhyBoxSprite(GAME_WIDTH, 16, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true);
+        this.floor = new PhyBoxSprite(game.width, 16, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true);
         this.floor.backgroundColor = "gray";
-        this.floor.position = {x:GAME_WIDTH/2, y:GAME_HEIGHT};
+        this.floor.position = {x:game.width/2, y:game.height};
         game.rootScene.addChild(this.floor);
         // 天井の生成
-        this.ceil = new PhyBoxSprite(GAME_WIDTH, 16, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true);
+        this.ceil = new PhyBoxSprite(game.width, 16, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true);
         this.ceil.backgroundColor = "gray";
-        this.ceil.position = {x:GAME_WIDTH/2, y:-GAME_HEIGHT};
+        this.ceil.position = {x:game.width/2, y:-game.height};
         game.rootScene.addChild(this.ceil);
         // 壁の生成 左
-        this.wallLeft = new PhyBoxSprite(16, GAME_HEIGHT*2, enchant.box2d.STATIC_SPRITE, 1.0, 0.0, 1.0, true);
+        this.wallLeft = new PhyBoxSprite(16, game.height*2, enchant.box2d.STATIC_SPRITE, 1.0, 0.0, 1.0, true);
         this.wallLeft.backgroundColor = "gray";
         this.wallLeft.position = {x: 0, y: 0};
         game.rootScene.addChild(this.wallLeft);
         // 壁の生成 右
-        this.wallRight = new PhyBoxSprite(16, GAME_HEIGHT*2, enchant.box2d.STATIC_SPRITE, 1.0, 0.0, 1.0, true);
+        this.wallRight = new PhyBoxSprite(16, game.height*2, enchant.box2d.STATIC_SPRITE, 1.0, 0.0, 1.0, true);
         this.wallRight.backgroundColor = "gray";
-        this.wallRight.position = {x: GAME_WIDTH, y: 0};
+        this.wallRight.position = {x: game.width, y: 0};
         game.rootScene.addChild(this.wallRight);
     },
 });
@@ -172,7 +169,7 @@ var LabelFlush = enchant.Class.create(enchant.Sprite, {
         this.image = game.assets['img/label_flush.png'];
         this.age = 0;
         this.term = Math.floor(game.fps * 0.6);
-        this.x = GAME_WIDTH - 60;
+        this.x = game.width - 60;
         this.y = toilet.y - this.height/2 - 35;
         this.addEventListener('enterframe', this.update);
         game.rootScene.addChild(this);
@@ -195,7 +192,7 @@ var Score = enchant.Class.create(enchant.Label, {
     initialize: function(){
         enchant.Label.call(this, "score : 0");
         this.num = 0;
-        this.x = GAME_WIDTH - 90;
+        this.x = game.width - 90;
         this.y = 10;
         game.rootScene.addChild(this);
     },
@@ -220,7 +217,20 @@ var Gauge = enchant.Class.create(enchant.Sprite, {
 });
 
 window.onload = function() {
-    game = enchant.Core(GAME_WIDTH, GAME_HEIGHT);
+
+    var width  = window.innerWidth * 2;
+    var height = window.innerHeight * 2;
+    var aspect = height / width;
+
+    var area = 1000500;
+
+    if (width * height > area) {
+        width = Math.sqrt(area / aspect);
+        height = Math.sqrt(area * aspect);
+    }
+    console.log(width * height)
+
+    game = new enchant.Core(width, height);
     game.fps = 30;
     //画像のロード
     game.preload('img/toilet.png', 'img/label.png', 'img/label_flush.png', 'img/flusher.png');
