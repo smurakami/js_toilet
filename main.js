@@ -1,13 +1,12 @@
 enchant();
 
 var unko_imgs = [
-    "img/unko_blue.png",
-    "img/unko_green.png",
-    "img/unko_orange.png",
-    "img/unko_pink.png",
-    "img/unko_purple.png",
-    "img/unko_red.png",
-    "img/unko_standerd.png",
+    "img/face_0.png",
+    "img/face_1.png",
+    "img/face_2.png",
+    "img/face_3.png",
+    "img/face_4.png",
+    "img/face_5.png",
 ];
 var github_img = "img/github.png";
 var unko_imgs_num = unko_imgs.length;
@@ -24,25 +23,24 @@ var gauge;
 
 var Unko = enchant.Class.create(PhyCircleSprite, {
     initialize: function(){
-        PhyCircleSprite.call(this, 8, enchant.box2d.DYNAMIC_SPRITE, 1.0, 1.0, 0.5, true);
+        PhyCircleSprite.call(this, 96/2, enchant.box2d.DYNAMIC_SPRITE, 1.0, 1.0, 0.5, true);
 
-        // var velocity = (100 + Math.random() * 400) * (1 + toilet.counter * 0.02);
-        var velocity = (100 + Math.random() * 400) * 2;
+        var velocity = (100 + Math.random() * 400) * 2 * 2;
         var direction = (0.2 + Math.random() * 0.6) * Math.PI;
 
         this.position = {x: game.width / 2, y: game.height - 48};
         this.velocity = {x: velocity * Math.cos(direction), y: velocity * -Math.sin(direction)};
         var img_index = Math.floor(Math.random() * unko_imgs_num);
-        if(Math.random() > 0.05) this.image = game.assets[unko_imgs[img_index]];
-        else this.image = game.assets[github_img];
+        this.image = game.assets[unko_imgs[img_index]];
         this.addEventListener('enterframe', this.update);
         game.rootScene.insertBefore(this, toilet);
     },
     update: function(){
         if(flusher.flushing){
-            this.vx += this.position.x > game.width / 2 ? -20 : 20;
-            if(this.position.x > toilet.hitbody.x - 9 && this.position.x < toilet.hitbody.x + toilet.hitbody.width + 9 &&
-               this.position.y > toilet.hitbody.y - toilet.hitbody.height / 2 && this.position.y < toilet.hitbody.y + toilet.hitbody.height + 9){
+            this.vx += this.position.x > game.width / 2 ? -40 : 40;
+            var radius = this.width/2 * 1.1;
+            if(this.position.x > toilet.hitbody.x - radius && this.position.x < toilet.hitbody.x + radius &&
+               this.position.y > toilet.hitbody.y - toilet.hitbody.height / 2 - radius && this.position.y < toilet.hitbody.y + toilet.hitbody.height + radius){
                 score.gain();
                 this.destroy();
             }
@@ -239,10 +237,11 @@ window.onload = function() {
         game.preload(unko_imgs[i]);
     }
     game.preload(github_img);
-    game.rootScene.backgroundColor = 'rgb(0, 255, 127)';
+    game.rootScene.backgroundColor = 'clear';
+    // game.rootScene.backgroundImage = 'url(../dots.png)';
 
     game.onload = function() {
-        var world = new PhysicsWorld(0.0, 25);
+        var world = new PhysicsWorld(0.0, 50);
         // var apple = new PhyCircleSprite(8, enchant.box2d.DYNAMIC_SPRITE, 1.0, 0.5, 1.0, true);
         // apple.backgroundColor = "red";
         // game.rootScene.addChild(apple);
