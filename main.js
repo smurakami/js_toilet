@@ -52,14 +52,14 @@ var Unko = enchant.Class.create(PhyCircleSprite, {
 
 var Toilet = enchant.Class.create(enchant.Sprite, {
     initialize: function(){
-        enchant.Sprite.call(this, 54, 58);
+        enchant.Sprite.call(this, 54*2, 58*2);
         this.counter = 0;
         this.image = game.assets['img/toilet.png'];
-        this.x = game.width / 2 - this.width / 2;
-        this.y = game.height - 8 - this.height;
-        this.hitbody = new PhyBoxSprite(34, 24, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true)
-        this.hitbody.x = this.x + 1;
-        this.hitbody.y = this.y + 34;
+        this.x = game.width / 2 - this.width/2;
+        this.y = game.height - this.height;
+        this.hitbody = new PhyBoxSprite(34 * 2, 24 * 2, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true)
+        this.hitbody.x = this.x + 1 * 2;
+        this.hitbody.y = this.y + 34 * 2;
 
         game.rootScene.addChild(this);
         game.rootScene.addChild(this.hitbody);
@@ -75,14 +75,14 @@ var Toilet = enchant.Class.create(enchant.Sprite, {
 
 var Flusher = enchant.Class.create(enchant.Sprite, {
     initialize: function(){
-        enchant.Sprite.call(this, 150, 53);
+        enchant.Sprite.call(this, 150 * 2, 53 * 2);
         this.image = game.assets['img/flusher.png']
-        this.x = 160;
-        this.y = game.height - 78;
+        this.x = game.width / 2;
+        this.y = game.height - 68 * 2;
 
-        this.hitbody = new PhyBoxSprite(24, 26, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true)
-        this.hitbody.x = this.x + 35 + 150 - 63;
-        this.hitbody.y = this.y + 13;
+        this.hitbody = new PhyBoxSprite(24 * 2, 26 * 2, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true)
+        this.hitbody.x = this.x + this.width * 0.81
+        this.hitbody.y = this.y + this.height * 0.27
 
         this.flushing = false;
 
@@ -118,7 +118,7 @@ var Room = enchant.Class.create(enchant.Sprite, {
         // 床の生成
         this.floor = new PhyBoxSprite(game.width, 16, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true);
         this.floor.backgroundColor = "gray";
-        this.floor.position = {x:game.width/2, y:game.height};
+        this.floor.position = {x:game.width/2, y:game.height + this.floor.height/2};
         game.rootScene.addChild(this.floor);
         // 天井の生成
         this.ceil = new PhyBoxSprite(game.width, 16, enchant.box2d.STATIC_SPRITE, 1.0, 0.5, 0.0, true);
@@ -128,12 +128,12 @@ var Room = enchant.Class.create(enchant.Sprite, {
         // 壁の生成 左
         this.wallLeft = new PhyBoxSprite(16, game.height*2, enchant.box2d.STATIC_SPRITE, 1.0, 0.0, 1.0, true);
         this.wallLeft.backgroundColor = "gray";
-        this.wallLeft.position = {x: 0, y: 0};
+        this.wallLeft.position = {x: -this.wallLeft.width/2, y: 0};
         game.rootScene.addChild(this.wallLeft);
         // 壁の生成 右
         this.wallRight = new PhyBoxSprite(16, game.height*2, enchant.box2d.STATIC_SPRITE, 1.0, 0.0, 1.0, true);
         this.wallRight.backgroundColor = "gray";
-        this.wallRight.position = {x: game.width, y: 0};
+        this.wallRight.position = {x: game.width + this.wallRight.width/2, y: 0};
         game.rootScene.addChild(this.wallRight);
     },
 });
