@@ -140,12 +140,12 @@ var Room = enchant.Class.create(enchant.Sprite, {
 
 var Label = enchant.Class.create(enchant.Sprite, {
     initialize: function(){
-        enchant.Sprite.call(this, 68, 30);
+        enchant.Sprite.call(this, 68 * 2, 30 * 2);
         this.image = game.assets['img/label.png'];
         this.age = 0;
         this.term = Math.floor(game.fps * 0.6);
-        this.x = toilet.x + toilet.width/2 - this.width/2 - 6;
-        this.y = toilet.y - this.height/2 - 15;
+        this.x = toilet.x + toilet.width/2 - this.width/2 - 6 * 2;
+        this.y = toilet.y - this.height/2 - 15 * 2;
         this.addEventListener('enterframe', this.update);
         game.rootScene.addChild(this);
     },
@@ -165,12 +165,12 @@ var Label = enchant.Class.create(enchant.Sprite, {
 
 var LabelFlush = enchant.Class.create(enchant.Sprite, {
     initialize: function(){
-        enchant.Sprite.call(this, 60, 60);
+        enchant.Sprite.call(this, 60 * 2, 60 * 2);
         this.image = game.assets['img/label_flush.png'];
         this.age = 0;
         this.term = Math.floor(game.fps * 0.6);
-        this.x = game.width - 60;
-        this.y = toilet.y - this.height/2 - 35;
+        this.x = flusher.x + flusher.width * 0.65;
+        this.y = flusher.y - flusher.height * 0.9;
         this.addEventListener('enterframe', this.update);
         game.rootScene.addChild(this);
     },
@@ -192,8 +192,9 @@ var Score = enchant.Class.create(enchant.Label, {
     initialize: function(){
         enchant.Label.call(this, "score : 0");
         this.num = 0;
-        this.x = game.width - 90;
-        this.y = 10;
+        this.x = 20
+        this.y = 20;
+        this.font = '28px sans-serif';
         game.rootScene.addChild(this);
     },
     gain: function(){
@@ -204,7 +205,7 @@ var Score = enchant.Class.create(enchant.Label, {
 
 var Gauge = enchant.Class.create(enchant.Sprite, {
     initialize: function(){
-        enchant.Sprite.call(this, 30, 30);
+        enchant.Sprite.call(this, 30* 2, 30);
         this.x = 0;
         this.y = 0;
         this.backgroundColor = "red";
