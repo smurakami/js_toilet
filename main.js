@@ -24,7 +24,7 @@ var gauge;
 
 var Unko = enchant.Class.create(PhyCircleSprite, {
     initialize: function(){
-        PhyCircleSprite.call(this, 8, enchant.box2d.DYNAMIC_SPRITE, 1.0, 1.0, 0.5, true);
+        PhyCircleSprite.call(this, 16, enchant.box2d.DYNAMIC_SPRITE, 1.0, 1.0, 0.5, true);
 
         // var velocity = (100 + Math.random() * 400) * (1 + toilet.counter * 0.02);
         var velocity = (100 + Math.random() * 400) * 2;
