@@ -239,7 +239,7 @@ window.onload = function() {
         game.preload(unko_imgs[i]);
     }
     game.preload(github_img);
-    game.rootScene.backgroundColor = 'rgb(0, 255, 127)';
+    game.rootScene.backgroundColor = 'rgb(255, 255, 0)';
 
     game.onload = function() {
         var world = new PhysicsWorld(0.0, 25);
